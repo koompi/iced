@@ -2,23 +2,22 @@ use crate::{backend, Backend, Primitive, Renderer};
 use iced_native::{
     mouse, Font, HorizontalAlignment, Color, Rectangle, VerticalAlignment, Size
 };
-pub use iced_native::icon::{self, Icon, Icons};
+pub use iced_native::icon_brand::{self, IconBrand, IconBrands};
 
-
-impl<B> icon::Renderer for Renderer<B>
+impl<B> icon_brand::Renderer for Renderer<B>
 where
     B: Backend + backend::Text,
 {
     const ICONS_FONT: Font = Font::External {
         name: "Line Awesome",
-        bytes: include_bytes!("../../fonts/la-solid-900.ttf"),
+        bytes: include_bytes!("../../fonts/la-brands-400.ttf"),
     };
-
+    
     fn default_size(&self) -> u16 {
         self.backend().default_size()
     }
 
-    fn measure(&self, content: Icons, size: u16, bounds: Size) -> (f32, f32) {
+    fn measure(&self, content: IconBrands, size: u16, bounds: Size) -> (f32, f32) {
         self.backend()
             .measure(&content.to_string(), f32::from(size), Self::ICONS_FONT, bounds)
     }
@@ -28,7 +27,7 @@ where
         defaults: &Self::Defaults,
         bounds: Rectangle,
         _viewport: &Rectangle,
-        content: Icons,
+        content: IconBrands,
         size: u16,
         color: Option<Color>,
         _label: &str,

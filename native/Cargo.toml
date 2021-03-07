@@ -14,6 +14,8 @@ debug = []
 twox-hash = "1.5"
 unicode-segmentation = "1.6"
 num-traits = "0.2"
+serde = { version = "1.0.117", features=['derive'] }
+serde_json = "1.0.59"
 
 [dependencies.iced_core]
 version = "0.3"

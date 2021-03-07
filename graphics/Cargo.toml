@@ -22,6 +22,7 @@ opengl = []
 glam = "0.10"
 raw-window-handle = "0.3"
 thiserror = "1.0"
+serde_json = "1.0.59"
 
 [dependencies.bytemuck]
 version = "1.4"

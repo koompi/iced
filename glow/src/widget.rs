@@ -22,7 +22,7 @@ pub mod scrollable;
 pub mod slider;
 pub mod text_input;
 pub mod tooltip;
-pub mod icon;
+pub mod table;
 
 #[doc(no_inline)]
 pub use button::Button;
@@ -51,7 +51,7 @@ pub use text_input::TextInput;
 #[doc(no_inline)]
 pub use tooltip::Tooltip;
 #[doc(no_inline)]
-pub use icon::{Icon, Icons};
+pub use table::Table;
 
 #[cfg(feature = "canvas")]
 #[cfg_attr(docsrs, doc(cfg(feature = "canvas")))]
@@ -69,7 +69,9 @@ pub mod qr_code;
 #[doc(no_inline)]
 pub use qr_code::QRCode;
 
-pub use iced_native::{Image, Space};
+pub use iced_native::{
+    Image, Space, Icon, Icons, IconBrand, IconBrands
+};
 
 /// A container that distributes its contents vertically.
 pub type Column<'a, Message> = iced_native::Column<'a, Message, Renderer>;
@@ -79,3 +81,6 @@ pub type Row<'a, Message> = iced_native::Row<'a, Message, Renderer>;
 
 /// A paragraph of text.
 pub type Text = iced_native::Text<Renderer>;
+
+/// A container that distributes its contents as a grid layout.
+pub type Grid<'a, Message> = iced_native::Grid<'a, Message, Renderer>;

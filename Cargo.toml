@@ -84,7 +84,8 @@ members = [
     "examples/todos",
     "examples/tour",
     "examples/tooltip",
-    "examples/number_input"
+    "examples/number_input",
+    "examples/menu",
 ]
 
 [dependencies]

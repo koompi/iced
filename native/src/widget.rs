@@ -39,6 +39,9 @@ pub mod text;
 pub mod text_input;
 pub mod tooltip;
 pub mod icon;
+pub mod icon_brand;
+pub mod grid;
+pub mod table;
 
 #[doc(no_inline)]
 pub use button::Button;
@@ -80,6 +83,12 @@ pub use text_input::TextInput;
 pub use tooltip::Tooltip;
 #[doc(no_inline)]
 pub use icon::{Icon, Icons};
+#[doc(no_inline)]
+pub use icon_brand::{IconBrand, IconBrands};
+#[doc(no_inline)]
+pub use grid::Grid;
+#[doc(no_inline)]
+pub use table::{Table, TableData, TableError, TableOptions, TableOrder, TableResult};
 
 use crate::event::{self, Event};
 use crate::layout;

@@ -1,15 +1,15 @@
-mod icons;
+mod icon_brands;
 
 use crate::{
     layout::{Limits, Node},
     Color, Element, Font, Hasher, HorizontalAlignment, Layout, Length, Point, Rectangle,
     Size, VerticalAlignment, Widget,
 };
-pub use icons::Icons;
+pub use icon_brands::IconBrands;
 
 #[allow(missing_debug_implementations)]
-pub struct Icon {
-    icon: Icons,
+pub struct IconBrand {
+    icon: IconBrands,
     width: Length,
     height: Length,
     color: Option<Color>,
@@ -19,8 +19,8 @@ pub struct Icon {
     vertical_alignment: VerticalAlignment,
 }
 
-impl Icon {
-    pub fn new(icon: Icons) -> Self {
+impl IconBrand {
+    pub fn new(icon: IconBrands) -> Self {
         Self {
             icon,
             width: Length::Shrink,
@@ -59,7 +59,7 @@ impl Icon {
     }
 }
 
-impl<Message, Renderer> Widget<Message, Renderer> for Icon
+impl<Message, Renderer> Widget<Message, Renderer> for IconBrand
 where
     Renderer: self::Renderer,
 {
@@ -116,14 +116,14 @@ pub trait Renderer: crate::Renderer + Sized {
 
     fn default_size(&self) -> u16;
 
-    fn measure(&self, icon: Icons, size: u16, bounds: Size) -> (f32, f32);
+    fn measure(&self, icon: IconBrands, size: u16, bounds: Size) -> (f32, f32);
 
     fn draw(
         &mut self,
         defaults: &Self::Defaults,
         bounds: Rectangle,
         viewport: &Rectangle,
-        icon: Icons,
+        icon: IconBrands,
         size: u16,
         color: Option<Color>,
         label: &str,
@@ -132,16 +132,16 @@ pub trait Renderer: crate::Renderer + Sized {
     ) -> Self::Output;
 }
 
-impl<'a, Message, Renderer> From<Icon> for Element<'a, Message, Renderer>
+impl<'a, Message, Renderer> From<IconBrand> for Element<'a, Message, Renderer>
 where
     Renderer: self::Renderer + 'a,
 {
-    fn from(icon: Icon) -> Element<'a, Message, Renderer> {
+    fn from(icon: IconBrand) -> Element<'a, Message, Renderer> {
         Element::new(icon)
     }
 }
 
-impl Clone for Icon {
+impl Clone for IconBrand {
     fn clone(&self) -> Self {
         Self {
             icon: self.icon,

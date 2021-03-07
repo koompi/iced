@@ -22,12 +22,15 @@ pub mod slider;
 pub mod svg;
 pub mod text_input;
 pub mod tooltip;
-pub mod icon;
+pub mod table;
 
 mod column;
 mod row;
 mod space;
 mod text;
+mod icon;
+mod icon_brand;
+mod grid;
 
 #[doc(no_inline)]
 pub use button::Button;
@@ -56,7 +59,7 @@ pub use text_input::TextInput;
 #[doc(no_inline)]
 pub use tooltip::Tooltip;
 #[doc(no_inline)]
-pub use icon::Icon;
+pub use table::Table;
 
 pub use column::Column;
 pub use image::Image;
@@ -64,6 +67,9 @@ pub use row::Row;
 pub use space::Space;
 pub use svg::Svg;
 pub use text::Text;
+pub use icon::Icon;
+pub use icon_brand::IconBrand;
+pub use grid::Grid;
 
 #[cfg(feature = "canvas")]
 #[cfg_attr(docsrs, doc(cfg(feature = "canvas")))]
