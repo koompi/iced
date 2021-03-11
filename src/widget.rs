@@ -17,8 +17,9 @@
 mod platform {
     pub use crate::renderer::widget::{
         button, checkbox, container, number_input, pane_grid, pick_list,
-        progress_bar, radio, rule, scrollable, slider, text_input, tooltip,
-        table, Column, Row, Space, Text, Icon, Icons, IconBrand, IconBrands, Grid,
+        progress_bar, radio, rule, scrollable, slider, table, text_input,
+        tooltip, Column, Grid, Icon, IconBrand, IconBrands, Icons, Row, Space,
+        Text,
     };
 
     #[cfg(any(feature = "canvas", feature = "glow_canvas"))]
@@ -52,8 +53,9 @@ mod platform {
     pub use {
         button::Button, checkbox::Checkbox, container::Container, image::Image,
         number_input::NumberInput, pane_grid::PaneGrid, pick_list::PickList,
-        progress_bar::ProgressBar, radio::Radio, rule::Rule, scrollable::Scrollable, 
-        slider::Slider, svg::Svg, text_input::TextInput, tooltip::Tooltip, table::Table
+        progress_bar::ProgressBar, radio::Radio, rule::Rule,
+        scrollable::Scrollable, slider::Slider, svg::Svg, table::Table,
+        text_input::TextInput, tooltip::Tooltip,
     };
 
     #[cfg(any(feature = "canvas", feature = "glow_canvas"))]

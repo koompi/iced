@@ -1,9 +1,8 @@
 use crate::{backend, Backend, Primitive, Renderer};
-use iced_native::{
-    mouse, Font, HorizontalAlignment, Color, Rectangle, VerticalAlignment, Size
-};
 pub use iced_native::icon::{self, Icon, Icons};
-
+use iced_native::{
+    mouse, Color, Font, HorizontalAlignment, Rectangle, Size, VerticalAlignment,
+};
 
 impl<B> icon::Renderer for Renderer<B>
 where
@@ -19,8 +18,12 @@ where
     }
 
     fn measure(&self, content: Icons, size: u16, bounds: Size) -> (f32, f32) {
-        self.backend()
-            .measure(&content.to_string(), f32::from(size), Self::ICONS_FONT, bounds)
+        self.backend().measure(
+            &content.to_string(),
+            f32::from(size),
+            Self::ICONS_FONT,
+            bounds,
+        )
     }
 
     fn draw(

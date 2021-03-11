@@ -2,8 +2,8 @@ mod icons;
 
 use crate::{
     layout::{Limits, Node},
-    Color, Element, Font, Hasher, HorizontalAlignment, Layout, Length, Point, Rectangle,
-    Size, VerticalAlignment, Widget,
+    Color, Element, Font, Hasher, HorizontalAlignment, Layout, Length, Point,
+    Rectangle, Size, VerticalAlignment, Widget,
 };
 pub use icons::Icons;
 
@@ -48,7 +48,10 @@ impl Icon {
         self
     }
 
-    pub fn horizontal_alignment(mut self, alignment: HorizontalAlignment) -> Self {
+    pub fn horizontal_alignment(
+        mut self,
+        alignment: HorizontalAlignment,
+    ) -> Self {
         self.horizontal_alignment = alignment;
         self
     }

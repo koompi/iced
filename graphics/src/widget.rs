@@ -20,17 +20,17 @@ pub mod rule;
 pub mod scrollable;
 pub mod slider;
 pub mod svg;
+pub mod table;
 pub mod text_input;
 pub mod tooltip;
-pub mod table;
 
 mod column;
+mod grid;
+mod icon;
+mod icon_brand;
 mod row;
 mod space;
 mod text;
-mod icon;
-mod icon_brand;
-mod grid;
 
 #[doc(no_inline)]
 pub use button::Button;
@@ -55,21 +55,21 @@ pub use scrollable::Scrollable;
 #[doc(no_inline)]
 pub use slider::Slider;
 #[doc(no_inline)]
+pub use table::Table;
+#[doc(no_inline)]
 pub use text_input::TextInput;
 #[doc(no_inline)]
 pub use tooltip::Tooltip;
-#[doc(no_inline)]
-pub use table::Table;
 
 pub use column::Column;
+pub use grid::Grid;
+pub use icon::Icon;
+pub use icon_brand::IconBrand;
 pub use image::Image;
 pub use row::Row;
 pub use space::Space;
 pub use svg::Svg;
 pub use text::Text;
-pub use icon::Icon;
-pub use icon_brand::IconBrand;
-pub use grid::Grid;
 
 #[cfg(feature = "canvas")]
 #[cfg_attr(docsrs, doc(cfg(feature = "canvas")))]

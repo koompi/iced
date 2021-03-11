@@ -1,8 +1,9 @@
 mod app;
 use app::{App, AppMessage};
 use iced::{
-    executor, scrollable, text_input, window, Align, Application, Color, Column, Command,
-    Container, Element, Length, Row, Scrollable, Settings, TextInput, Grid, IconBrands
+    executor, scrollable, text_input, window, Align, Application, Color,
+    Column, Command, Container, Element, Grid, IconBrands, Length, Row,
+    Scrollable, Settings, TextInput,
 };
 
 fn main() -> iced::Result {
@@ -141,17 +142,16 @@ impl Application for Menu {
             .align_items(Align::Center)
             .push(search_section);
 
-        let menu: Element<_> = self
-            .filtered_application
-            .iter_mut()
-            .enumerate()
-            .fold(Grid::new().column_width(175), |grid, (i, app)| {
-                grid.push(
-                    app.view()
-                        .map(move |message| MenuMessage::AppMessage(i, message)),
-                )
-            })
-            .into();
+        let menu: Element<_> =
+            self.filtered_application
+                .iter_mut()
+                .enumerate()
+                .fold(Grid::new().column_width(175), |grid, (i, app)| {
+                    grid.push(app.view().map(move |message| {
+                        MenuMessage::AppMessage(i, message)
+                    }))
+                })
+                .into();
 
         let content = Column::new()
             .spacing(20)
@@ -189,18 +189,19 @@ mod styles {
     pub struct CustomTextInput;
 
     impl text_input::StyleSheet for CustomTextInput {
-        fn active(&self) -> text_input::Style { 
+        fn active(&self) -> text_input::Style {
             text_input::Style {
                 background: Color {
                     a: 0.2,
                     ..Color::BLACK
-                }.into(),
+                }
+                .into(),
                 border_radius: 12.7,
                 border_width: 0.0,
                 border_color: Color::from_rgb8(24, 49, 251),
             }
         }
-        fn focused(&self) -> text_input::Style { 
+        fn focused(&self) -> text_input::Style {
             let active = self.active();
 
             text_input::Style {
@@ -214,10 +215,10 @@ mod styles {
                 ..Color::BLACK
             }
         }
-        fn value_color(&self) -> Color { 
+        fn value_color(&self) -> Color {
             Color::BLACK
         }
-        fn selection_color(&self) -> Color { 
+        fn selection_color(&self) -> Color {
             self.active().border_color
         }
     }

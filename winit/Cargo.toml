@@ -15,7 +15,7 @@ debug = ["iced_native/debug"]
 
 [dependencies]
 winit = { git = "https://github.com/koompi/winit.git", branch = "strut" }
-window_clipboard = "0.1"
+window_clipboard = "0.2"
 log = "0.4"
 thiserror = "1.0"
 

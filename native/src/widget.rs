@@ -23,6 +23,9 @@ pub mod button;
 pub mod checkbox;
 pub mod column;
 pub mod container;
+pub mod grid;
+pub mod icon;
+pub mod icon_brand;
 pub mod image;
 pub mod number_input;
 pub mod pane_grid;
@@ -35,13 +38,10 @@ pub mod scrollable;
 pub mod slider;
 pub mod space;
 pub mod svg;
+pub mod table;
 pub mod text;
 pub mod text_input;
 pub mod tooltip;
-pub mod icon;
-pub mod icon_brand;
-pub mod grid;
-pub mod table;
 
 #[doc(no_inline)]
 pub use button::Button;
@@ -51,6 +51,12 @@ pub use checkbox::Checkbox;
 pub use column::Column;
 #[doc(no_inline)]
 pub use container::Container;
+#[doc(no_inline)]
+pub use grid::Grid;
+#[doc(no_inline)]
+pub use icon::{Icon, Icons};
+#[doc(no_inline)]
+pub use icon_brand::{IconBrand, IconBrands};
 #[doc(no_inline)]
 pub use image::Image;
 #[doc(no_inline)]
@@ -76,19 +82,15 @@ pub use space::Space;
 #[doc(no_inline)]
 pub use svg::Svg;
 #[doc(no_inline)]
+pub use table::{
+    Table, TableData, TableError, TableOptions, TableOrder, TableResult,
+};
+#[doc(no_inline)]
 pub use text::Text;
 #[doc(no_inline)]
 pub use text_input::TextInput;
 #[doc(no_inline)]
 pub use tooltip::Tooltip;
-#[doc(no_inline)]
-pub use icon::{Icon, Icons};
-#[doc(no_inline)]
-pub use icon_brand::{IconBrand, IconBrands};
-#[doc(no_inline)]
-pub use grid::Grid;
-#[doc(no_inline)]
-pub use table::{Table, TableData, TableError, TableOptions, TableOrder, TableResult};
 
 use crate::event::{self, Event};
 use crate::layout;
@@ -179,9 +181,9 @@ where
         _event: Event,
         _layout: Layout<'_>,
         _cursor_position: Point,
-        _messages: &mut Vec<Message>,
         _renderer: &Renderer,
-        _clipboard: Option<&dyn Clipboard>,
+        _clipboard: &mut dyn Clipboard,
+        _messages: &mut Vec<Message>,
     ) -> event::Status {
         event::Status::Ignored
     }

@@ -331,9 +331,9 @@ where
         event: Event,
         layout: Layout<'_>,
         cursor_position: Point,
-        messages: &mut Vec<Message>,
         renderer: &Renderer,
-        clipboard: Option<&dyn Clipboard>,
+        clipboard: &mut dyn Clipboard,
+        messages: &mut Vec<Message>,
     ) -> event::Status {
         let mut children = layout.children();
         let content = children.next().unwrap();
@@ -409,9 +409,9 @@ where
                                         event.clone(),
                                         content,
                                         cursor_position,
-                                        messages,
                                         renderer,
                                         clipboard,
+                                        messages,
                                     )
                                 } else {
                                     event::Status::Ignored
@@ -444,9 +444,9 @@ where
                                     event.clone(),
                                     content,
                                     cursor_position,
-                                    messages,
                                     renderer,
                                     clipboard,
+                                    messages,
                                 )
                             }
                         }
@@ -454,9 +454,9 @@ where
                             event.clone(),
                             content,
                             cursor_position,
-                            messages,
                             renderer,
                             clipboard,
+                            messages,
                         ),
                     },
                     // This section from line 462 to 483 was owned by 13r0ck (https://github.com/13r0ck).
@@ -485,9 +485,9 @@ where
                         event.clone(),
                         content,
                         cursor_position,
-                        messages,
                         renderer,
                         clipboard,
+                        messages,
                     ),
                 }
             }
