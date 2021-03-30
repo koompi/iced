@@ -29,7 +29,7 @@ use std::mem::ManuallyDrop;
 ///
 /// When using an [`Application`] with the `debug` feature enabled, a debug view
 /// can be toggled by pressing `F12`.
-pub trait Application: Program {
+pub trait Application: Program<Clipboard = Clipboard> {
     /// The data needed to initialize your [`Application`].
     type Flags;
 
@@ -164,7 +164,22 @@ where
             return;
         }
 
-        if let Some(event) = event.to_static() {
+        let event = match event {
+            winit::event::Event::WindowEvent {
+                event:
+                    winit::event::WindowEvent::ScaleFactorChanged {
+                        new_inner_size,
+                        ..
+                    },
+                window_id,
+            } => Some(winit::event::Event::WindowEvent {
+                event: winit::event::WindowEvent::Resized(*new_inner_size),
+                window_id,
+            }),
+            _ => event.to_static(),
+        };
+
+        if let Some(event) = event {
             sender.start_send(event).expect("Send event");
 
             let poll = instance.as_mut().poll(&mut context);
@@ -257,6 +272,7 @@ async fn run_instance<A, E, C>(
                         &mut application,
                         &mut runtime,
                         &mut debug,
+                        &mut clipboard,
                         &mut messages,
                     );
 
@@ -283,11 +299,16 @@ async fn run_instance<A, E, C>(
                 messages.push(message);
             }
             event::Event::RedrawRequested(_) => {
+                let physical_size = state.physical_size();
+
+                if physical_size.width == 0 || physical_size.height == 0 {
+                    continue;
+                }
+
                 debug.render_started();
                 let current_viewport_version = state.viewport_version();
 
                 if viewport_version != current_viewport_version {
-                    let physical_size = state.physical_size();
                     let logical_size = state.logical_size();
 
                     debug.layout_started();
@@ -409,13 +430,14 @@ pub fn update<A: Application, E: Executor>(
     application: &mut A,
     runtime: &mut Runtime<E, Proxy<A::Message>, A::Message>,
     debug: &mut Debug,
+    clipboard: &mut A::Clipboard,
     messages: &mut Vec<A::Message>,
 ) {
     for message in messages.drain(..) {
         debug.log_message(&message);
 
         debug.update_started();
-        let command = runtime.enter(|| application.update(message));
+        let command = runtime.enter(|| application.update(message, clipboard));
         debug.update_finished();
 
         runtime.spawn(command);
