@@ -15,6 +15,8 @@ struct Counter {
 enum Message {
     IncrementPressed,
     DecrementPressed,
+    DoubleInc,
+    DoubleDec,
 }
 
 impl Sandbox for Counter {
@@ -36,6 +38,12 @@ impl Sandbox for Counter {
             Message::DecrementPressed => {
                 self.value -= 1;
             }
+            Message::DoubleInc => {
+                self.value += 2;
+            }
+            Message::DoubleDec => {
+                self.value -= 2;
+            }
         }
     }
 
@@ -45,12 +53,14 @@ impl Sandbox for Counter {
             .align_items(Align::Center)
             .push(
                 Button::new(&mut self.increment_button, Text::new("Increment"))
-                    .on_press(Message::IncrementPressed),
+                    .on_press(Message::IncrementPressed)
+                    .on_double_click(Message::DoubleInc),
             )
             .push(Text::new(self.value.to_string()).size(50))
             .push(
                 Button::new(&mut self.decrement_button, Text::new("Decrement"))
-                    .on_press(Message::DecrementPressed),
+                    .on_press(Message::DecrementPressed)
+                    .on_double_click(Message::DoubleDec),
             )
             .into()
     }

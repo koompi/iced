@@ -32,6 +32,7 @@ pub struct Button<'a, Message, Renderer: self::Renderer> {
     state: &'a mut State,
     content: Element<'a, Message, Renderer>,
     on_press: Option<Message>,
+    on_double_click: Option<Message>,
     width: Length,
     height: Length,
     min_width: u32,
@@ -55,6 +56,7 @@ where
             state,
             content: content.into(),
             on_press: None,
+            on_double_click: None,
             width: Length::Shrink,
             height: Length::Shrink,
             min_width: 0,
@@ -100,6 +102,12 @@ where
         self
     }
 
+    /// Sets the message that will be produced when user double click on the [`Button`].
+    pub fn on_double_click(mut self, msg: Message) -> Self {
+        self.on_double_click = Some(msg);
+        self
+    }
+
     /// Sets the style of the [`Button`].
     pub fn style(mut self, style: impl Into<Renderer::Style>) -> Self {
         self.style = style.into();
@@ -108,9 +116,11 @@ where
 }
 
 /// The local state of a [`Button`].
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, Copy, Default)]
 pub struct State {
     is_pressed: bool,
+    is_double_clicked: bool,
+    last_click: Option<mouse::Click>
 }
 
 impl State {
@@ -178,11 +188,25 @@ where
         match event {
             Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Left))
             | Event::Touch(touch::Event::FingerPressed { .. }) => {
-                if self.on_press.is_some() {
+                if self.on_press.is_some() || self.on_double_click.is_some() {
                     let bounds = layout.bounds();
 
                     if bounds.contains(cursor_position) {
-                        self.state.is_pressed = true;
+                        let click = mouse::Click::new(
+                            cursor_position,
+                            self.state.last_click,
+                        );
+
+                        match click.kind() {
+                            mouse::click::Kind::Single => {
+                                self.state.is_pressed = true;
+                            },
+                            mouse::click::Kind::Double => {
+                                self.state.is_double_clicked = true;
+                            },
+                            _ => {}
+                        }
+                        self.state.last_click = Some(click);
 
                         return event::Status::Captured;
                     }
@@ -190,9 +214,8 @@ where
             }
             Event::Mouse(mouse::Event::ButtonReleased(mouse::Button::Left))
             | Event::Touch(touch::Event::FingerLifted { .. }) => {
+                let bounds = layout.bounds();
                 if let Some(on_press) = self.on_press.clone() {
-                    let bounds = layout.bounds();
-
                     if self.state.is_pressed {
                         self.state.is_pressed = false;
 
@@ -202,10 +225,23 @@ where
 
                         return event::Status::Captured;
                     }
+                } 
+
+                if let Some(on_double_click) = self.on_double_click.clone() {
+                    if self.state.is_double_clicked {
+                        self.state.is_double_clicked = false;
+
+                        if bounds.contains(cursor_position) {
+                            messages.push(on_double_click);
+                        }
+
+                        return event::Status::Captured;
+                    }
                 }
             }
             Event::Touch(touch::Event::FingerLost { .. }) => {
                 self.state.is_pressed = false;
+                self.state.is_double_clicked = false;
             }
             _ => {}
         }
@@ -225,8 +261,8 @@ where
             defaults,
             layout.bounds(),
             cursor_position,
-            self.on_press.is_none(),
-            self.state.is_pressed,
+            self.on_press.is_none() && self.on_double_click.is_none(),
+            self.state.is_pressed || self.state.is_double_clicked,
             &self.style,
             &self.content,
             layout.children().next().unwrap(),
