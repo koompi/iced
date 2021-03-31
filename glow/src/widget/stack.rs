@@ -1,7 +1,8 @@
 //! Stack multiple widgets overlay.
 use crate::Renderer;
+pub use iced_native::stack::Overflow;
 
-/// /// A widget used to stack multiple widgets overlay.
+/// A widget used to stack multiple widgets overlay.
 ///
 /// This is an alias of an `iced_native` stack with a default
 /// `Renderer`.

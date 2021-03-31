@@ -55,9 +55,9 @@ pub use container::Container;
 #[doc(no_inline)]
 pub use grid::Grid;
 #[doc(no_inline)]
-pub use icon::{Icon, Icons};
+pub use icon::Icon;
 #[doc(no_inline)]
-pub use icon_brand::{IconBrand, IconBrands};
+pub use icon_brand::IconBrand;
 #[doc(no_inline)]
 pub use image::Image;
 #[doc(no_inline)]
@@ -83,9 +83,7 @@ pub use space::Space;
 #[doc(no_inline)]
 pub use svg::Svg;
 #[doc(no_inline)]
-pub use table::{
-    Table, TableData, TableError, TableOptions, TableOrder, TableResult,
-};
+pub use table::Table;
 #[doc(no_inline)]
 pub use text::Text;
 #[doc(no_inline)]

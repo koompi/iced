@@ -1,7 +1,7 @@
 use crate::Renderer;
 
 pub use iced_graphics::table::{Style, StyleSheet};
-pub use iced_native::table::State;
+pub use iced_native::table::{State, TableData, TableError, TableOptions, TableOrder, TableResult};
 
 /// A widget that produces a message when clicked.
 ///

@@ -72,7 +72,7 @@ pub mod qr_code;
 #[doc(no_inline)]
 pub use qr_code::QRCode;
 
-pub use iced_native::{Icon, IconBrand, IconBrands, Icons, Image, Space};
+pub use iced_native::{Icon, IconBrand, Space};
 
 /// A container that distributes its contents vertically.
 pub type Column<'a, Message> = iced_native::Column<'a, Message, Renderer>;

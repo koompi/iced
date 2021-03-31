@@ -18,9 +18,8 @@ where B: Backend
         _overflow: &Overflow,
         children: &[(Element<'_, Message, Self>, Option<Point>)],
     ) -> Self::Output {
-        let layout_bound = layout.bounds();
-        let is_mouse_over = layout_bound.contains(cursor_position);
         let mut mouse_interaction = mouse::Interaction::default();
+
         (
             Primitive::Group {
                 primitives: children
@@ -37,11 +36,7 @@ where B: Backend
                 })
                 .collect(),
             },
-            if is_mouse_over {
-                mouse::Interaction::Pointer
-            } else {
-                mouse::Interaction::default()
-            },
+            mouse_interaction
         )
     }
 }
