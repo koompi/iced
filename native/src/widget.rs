@@ -42,6 +42,7 @@ pub mod table;
 pub mod text;
 pub mod text_input;
 pub mod tooltip;
+pub mod stack;
 
 #[doc(no_inline)]
 pub use button::Button;
@@ -91,6 +92,8 @@ pub use text::Text;
 pub use text_input::TextInput;
 #[doc(no_inline)]
 pub use tooltip::Tooltip;
+#[doc(no_inline)]
+pub use stack::Stack;
 
 use crate::event::{self, Event};
 use crate::layout;
