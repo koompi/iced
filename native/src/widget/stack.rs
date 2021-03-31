@@ -1,5 +1,5 @@
 use crate::{
-    layout::{Limits, Node}, Element, Hasher, Layout, Length, Point, Rectangle, Size, Widget,
+    layout::{Limits, Node}, event, overlay, Clipboard, Element, Hasher, Layout, Length, Point, Rectangle, Size, Widget, Event,
 };
 
 #[derive(Debug, Clone, Copy)]
@@ -127,9 +127,9 @@ where
         event: Event,
         layout: Layout<'_>,
         cursor_position: Point,
-        messages: &mut Vec<Message>,
         renderer: &Renderer,
-        clipboard: Option<&dyn Clipboard>,
+        clipboard: &mut dyn Clipboard,
+        messages: &mut Vec<Message>,
     ) -> event::Status {
         self.children
             .iter_mut()
@@ -139,15 +139,17 @@ where
                     event.clone(),
                     layout,
                     cursor_position,
-                    messages,
                     renderer,
                     clipboard,
+                    messages,
                 )
             })
             .fold(event::Status::Ignored, event::Status::merge)
     }
 
     fn hash_layout(&self, state: &mut Hasher) {
+        use std::hash::Hash;
+        
         self.width.hash(state);
         self.height.hash(state);
         self.children.iter().for_each(|(element, _)| {
@@ -162,7 +164,7 @@ where
         self.children
             .iter_mut()
             .zip(layout.children())
-            .filter_map(|(child, layout)| child.widget.overlay(layout))
+            .filter_map(|((child, _), layout)| child.widget.overlay(layout))
             .next()
     }
 }
