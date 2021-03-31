@@ -23,6 +23,8 @@ impl Overflow {
 pub struct Stack<'a, Message, Renderer> {
     overflow: Overflow,
     children: Vec<(Element<'a, Message, Renderer>, Option<Point>)>,
+    width: Length,
+    height: Length,
 }
 
 impl<'a, Message, Renderer> Stack<'a, Message, Renderer> {
@@ -34,11 +36,23 @@ impl<'a, Message, Renderer> Stack<'a, Message, Renderer> {
         Self {
             overflow: Overflow::default(),
             children,
+            width: Length::Shrink,
+            height: Length::Shrink,
         }
     }
 
     pub fn overflow(mut self, overflow: Overflow) -> Self {
         self.overflow = overflow;
+        self
+    }
+
+    pub fn width(mut self, width: Length) -> Self {
+        self.width = width;
+        self
+    }
+
+    pub fn height(mut self, height: Length) -> Self {
+        self.height = height;
         self
     }
 
@@ -56,11 +70,11 @@ where
     Renderer: self::Renderer,
 {
     fn width(&self) -> Length {
-        Length::Shrink
+        self.width
     }
 
     fn height(&self) -> Length {
-        Length::Shrink
+        self.height
     }
 
     fn layout(&self, renderer: &Renderer, limits: &Limits) -> Node {
@@ -108,10 +122,48 @@ where
         renderer.draw(defaults, layout, cursor_position, viewport, &self.overflow, &self.children)
     }
 
+    fn on_event(
+        &mut self,
+        event: Event,
+        layout: Layout<'_>,
+        cursor_position: Point,
+        messages: &mut Vec<Message>,
+        renderer: &Renderer,
+        clipboard: Option<&dyn Clipboard>,
+    ) -> event::Status {
+        self.children
+            .iter_mut()
+            .zip(layout.children())
+            .map(|((child, _), layout)| {
+                child.widget.on_event(
+                    event.clone(),
+                    layout,
+                    cursor_position,
+                    messages,
+                    renderer,
+                    clipboard,
+                )
+            })
+            .fold(event::Status::Ignored, event::Status::merge)
+    }
+
     fn hash_layout(&self, state: &mut Hasher) {
+        self.width.hash(state);
+        self.height.hash(state);
         self.children.iter().for_each(|(element, _)| {
             element.hash_layout(state);
         })
+    }
+
+    fn overlay(
+        &mut self,
+        layout: Layout<'_>,
+    ) -> Option<overlay::Element<'_, Message, Renderer>> {
+        self.children
+            .iter_mut()
+            .zip(layout.children())
+            .filter_map(|(child, layout)| child.widget.overlay(layout))
+            .next()
     }
 }
 
