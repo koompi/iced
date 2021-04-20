@@ -34,6 +34,7 @@ pub struct Button<'a, Message, Renderer: self::Renderer> {
     content: Element<'a, Message, Renderer>,
     on_press: Option<Message>,
     on_double_click: Option<Message>,
+    on_right_click: Option<Message>,
     width: Length,
     height: Length,
     min_width: u32,
@@ -58,6 +59,7 @@ where
             content: content.into(),
             on_press: None,
             on_double_click: None,
+            on_right_click: None,
             width: Length::Shrink,
             height: Length::Shrink,
             min_width: 0,
@@ -109,6 +111,12 @@ where
         self
     }
 
+    /// Sets the message that will be produced when user right click on the [`Button`].
+    pub fn on_right_click(mut self, msg: Message) -> Self {
+        self.on_right_click = Some(msg);
+        self
+    }
+
     /// Sets the style of the [`Button`].
     pub fn style(mut self, style: impl Into<Renderer::Style>) -> Self {
         self.style = style.into();
@@ -121,6 +129,7 @@ where
 pub struct State {
     is_pressed: bool,
     is_double_clicked: bool,
+    is_right_clicked: bool,
     last_click: Option<mouse::Click>
 }
 
@@ -213,6 +222,28 @@ where
                     }
                 }
             }
+            Event::Mouse(mouse::Event::ButtonPressed(mouse::Button::Right)) => {
+                if self.on_right_click.is_some() {
+                    let bounds = layout.bounds();
+
+                    if bounds.contains(cursor_position) {
+                        let click = mouse::Click::new(
+                            cursor_position,
+                            self.state.last_click,
+                        );
+
+                        match click.kind() {
+                            mouse::click::Kind::Single => {
+                                self.state.is_right_clicked = true;
+                            },
+                            _ => {}
+                        }
+                        self.state.last_click = Some(click);
+
+                        return event::Status::Captured;
+                    }
+                }
+            }
             Event::Mouse(mouse::Event::ButtonReleased(mouse::Button::Left))
             | Event::Touch(touch::Event::FingerLifted { .. }) => {
                 let bounds = layout.bounds();
@@ -240,9 +271,24 @@ where
                     }
                 }
             }
+            Event::Mouse(mouse::Event::ButtonReleased(mouse::Button::Right)) => {
+                let bounds = layout.bounds();
+                if let Some(on_right_click) = self.on_right_click.clone() {
+                    if self.state.is_right_clicked {
+                        self.state.is_right_clicked = false;
+
+                        if bounds.contains(cursor_position) {
+                            messages.push(on_right_click);
+                        }
+
+                        return event::Status::Captured;
+                    }
+                }
+            }
             Event::Touch(touch::Event::FingerLost { .. }) => {
                 self.state.is_pressed = false;
                 self.state.is_double_clicked = false;
+                self.state.is_right_clicked = false;
             }
             _ => {}
         }
@@ -262,8 +308,8 @@ where
             defaults,
             layout.bounds(),
             cursor_position,
-            self.on_press.is_none() && self.on_double_click.is_none(),
-            self.state.is_pressed || self.state.is_double_clicked,
+            self.on_press.is_none() && self.on_double_click.is_none() && self.on_right_click.is_none(),
+            self.state.is_pressed || self.state.is_double_clicked || self.state.is_right_clicked,
             &self.style,
             &self.content,
             layout.children().next().unwrap(),
